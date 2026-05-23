@@ -17,8 +17,11 @@ Currently, two official plugins are available:
    ```env
    VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
    VITE_SUPABASE_ANON_KEY=tu-clave-anonima-aqui
-   VITE_APP_PASSWORD=tu-contraseña-segura
    ```
+
+5. Crea un usuario de autenticación en Supabase (Auth > Users) para iniciar sesión con email y contraseña.
+
+6. No subas `.env.local` al repositorio; ya está incluido en `.gitignore`.
 
 5. No subas `.env.local` al repositorio; ya está incluido en `.gitignore`.
 

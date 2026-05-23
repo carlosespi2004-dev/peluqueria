@@ -1,10 +1,11 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Scissors, Lock, Eye, EyeOff } from 'lucide-react'
-import { login } from '../lib/utils'
+import { Scissors, Lock, Eye, EyeOff, Mail } from 'lucide-react'
+import { signIn } from '../lib/utils'
 
 export default function Login() {
   const navigate = useNavigate()
+  const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [error, setError]       = useState('')
@@ -15,12 +16,12 @@ export default function Login() {
     setLoading(true)
     setError('')
 
-    await new Promise(r => setTimeout(r, 400))
+    const result = await signIn(email.trim(), password)
 
-    if (login(password)) {
+    if (result.success) {
       navigate('/')
     } else {
-      setError('Contraseña incorrecta. Inténtalo de nuevo.')
+      setError(result.message ?? 'Contraseña incorrecta. Inténtalo de nuevo.')
       setPassword('')
     }
     setLoading(false)
@@ -40,7 +41,7 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gold-500/10 border border-gold-500/30 mb-4">
             <Scissors size={28} className="text-gold-400" />
           </div>
-          <h1 className="font-display text-4xl text-ink-50 mb-1">BarberControl</h1>
+          <h1 className="font-display text-4xl text-ink-50 mb-1">Barberia Roman</h1>
           <p className="text-ink-300 text-sm font-body">Sistema de Gestión de Peluquería</p>
         </div>
 
@@ -49,6 +50,21 @@ export default function Login() {
           <div className="gold-line mb-6" />
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="input-label">
+                <Mail size={12} className="inline mr-1" /> Correo electrónico
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="usuario@ejemplo.com"
+                className="w-full"
+                autoFocus
+                required
+              />
+            </div>
+
             <div>
               <label className="input-label">
                 <Lock size={12} className="inline mr-1" /> Contraseña
@@ -60,7 +76,6 @@ export default function Login() {
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Ingresa tu contraseña"
                   className="w-full pr-10"
-                  autoFocus
                   required
                 />
                 <button

@@ -54,7 +54,7 @@ export default function HistorialPage() {
   const ganancia      = totalIngresos - totalGastos
 
   return (
-    <div className="space-y-5 max-w-4xl">
+    <div className="space-y-5 w-full max-w-4xl mx-auto">
       <div>
         <h1 className="font-display text-3xl text-ink-50">Historial</h1>
         <p className="text-ink-300 text-sm font-mono">{filtrados.length} movimientos encontrados</p>
@@ -112,7 +112,7 @@ export default function HistorialPage() {
       </div>
 
       {/* Resumen del período */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="card text-center">
           <p className="font-mono text-emerald-400 text-lg">{fmt.guarani(totalIngresos)}</p>
           <p className="stat-label">Ingresos</p>

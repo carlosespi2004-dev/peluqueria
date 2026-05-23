@@ -22,8 +22,8 @@ interface SidebarProps {
 export default function Sidebar({ mobile, onClose }: SidebarProps) {
   const navigate = useNavigate()
 
-  function handleLogout() {
-    logout()
+  async function handleLogout() {
+    await logout()
     navigate('/login')
   }
 
@@ -36,7 +36,7 @@ export default function Sidebar({ mobile, onClose }: SidebarProps) {
             <Scissors size={16} className="text-surface-400" />
           </div>
           <div>
-            <p className="font-display text-lg text-gold-400 leading-tight">BarberControl</p>
+            <p className="font-display text-lg text-gold-400 leading-tight">Barberia Roman</p>
             <p className="text-xs text-ink-300 font-mono">Sistema de Gestión</p>
           </div>
         </div>

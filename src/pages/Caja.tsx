@@ -54,9 +54,19 @@ export default function CajaPage() {
   }
 
   async function cerrarCaja() {
-    if (!caja || !confirm('¿Cerrar la caja del día? Esta acción no se puede deshacer.')) return
+    if (!caja || !confirm('¿Cerrar la caja del día? Podrás reabrirla si fue un error.')) return
     const { data, error: e } = await supabase.from('cajas')
       .update({ estado: 'cerrada', hora_cierre: format(new Date(), 'HH:mm:ss') })
+      .eq('id', caja.id).select().single()
+    if (e) { setError(e.message); return }
+    setCaja(data)
+  }
+
+  async function reabrirCaja() {
+    if (!caja || caja.estado !== 'cerrada') return
+    if (!confirm('¿Reabrir la caja cerrada? Esto permitirá seguir agregando servicios hoy.')) return
+    const { data, error: e } = await supabase.from('cajas')
+      .update({ estado: 'abierta', hora_cierre: null })
       .eq('id', caja.id).select().single()
     if (e) { setError(e.message); return }
     setCaja(data)
@@ -100,7 +110,7 @@ export default function CajaPage() {
   )
 
   return (
-    <div className="space-y-5 max-w-3xl">
+    <div className="space-y-5 w-full max-w-3xl mx-auto">
       <div>
         <h1 className="font-display text-3xl text-ink-50">Caja del Día</h1>
         <p className="text-ink-300 text-sm font-mono">{fmt.fecha(today)}</p>
@@ -150,9 +160,13 @@ export default function CajaPage() {
                 <p className="stat-label">Total del día</p>
                 <p className="font-mono text-xl text-gold-400">{fmt.guarani(totalHoy)}</p>
               </div>
-              {caja.estado === 'abierta' && (
+              {caja.estado === 'abierta' ? (
                 <button onClick={cerrarCaja} className="btn-danger">
                   <Lock size={14} className="inline mr-1" /> Cerrar
+                </button>
+              ) : (
+                <button onClick={reabrirCaja} className="btn-primary">
+                  <Unlock size={14} className="inline mr-1" /> Reabrir
                 </button>
               )}
             </div>
@@ -162,7 +176,7 @@ export default function CajaPage() {
 
       {/* Resumen rápido */}
       {caja && (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="card text-center">
             <Users size={16} className="text-gold-400 mx-auto mb-1" />
             <p className="font-mono text-xl text-gold-400">{atenciones.length}</p>
@@ -204,7 +218,7 @@ export default function CajaPage() {
                     {catalogo.map(c => (
                       <option key={c.id} value={c.id}>{c.nombre} — {fmt.guarani(c.precio)}</option>
                     ))}
-                    <option value="custom">✏️ Personalizado</option>
+                    <option value="custom">Personalizado</option>
                   </select>
                 </div>
                 <div>

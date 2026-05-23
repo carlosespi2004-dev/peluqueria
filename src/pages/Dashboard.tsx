@@ -128,7 +128,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6 max-w-7xl">
+    <div className="space-y-6 w-full max-w-7xl mx-auto">
       {/* Header */}
       <div>
         <h1 className="font-display text-3xl text-ink-50">Panel Principal</h1>

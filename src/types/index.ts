@@ -15,7 +15,7 @@ export interface Atencion {
   created_at: string
 }
 
-export type CategoriaGasto = 'productos' | 'alquiler' | 'luz' | 'agua' | 'salarios' | 'otros'
+export type CategoriaGasto = 'productos' | 'agua' | 'salarios' | 'otros'
 
 export interface Gasto {
   id: string

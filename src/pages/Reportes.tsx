@@ -3,6 +3,7 @@ import { FileText, FileSpreadsheet } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { fmt, rangos, CATEGORIAS_GASTO } from '../lib/utils'
 import type { Atencion, Gasto } from '../types'
+import type { WorkSheet } from 'xlsx'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer,
@@ -62,11 +63,61 @@ export default function ReportesPage() {
     const todos = [...atData, ...gData].sort((a, b) => a.Fecha.localeCompare(b.Fecha))
 
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(todos), 'Movimientos')
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(atData), 'Ingresos')
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(gData.map(g => ({ ...g, Monto: -g.Monto }))), 'Gastos')
 
-    XLSX.writeFile(wb, `reporte-peluqueria-${desde}-${hasta}.xlsx`)
+    const formatSheet = (sheet: unknown, data: Array<Record<string, unknown>>, headerColor: string) => {
+      const worksheet = sheet as WorkSheet
+      const headers = ['Fecha', 'Tipo', 'Concepto', 'Monto', 'Notas']
+      const widths = headers.map(header => {
+        const maxLength = Math.max(
+          header.length,
+          ...data.map(row => String(row[header] ?? '').length),
+        )
+        return { wch: Math.min(Math.max(maxLength + 2, 14), 36) }
+      })
+      worksheet['!cols'] = widths
+
+      const range = XLSX.utils.decode_range(worksheet['!ref']!)
+      for (let col = 0; col <= range.e.c; col += 1) {
+        const headerCell = worksheet[XLSX.utils.encode_cell({ c: col, r: 0 })]
+        if (headerCell) {
+          headerCell.s = {
+            font: { bold: true, color: { rgb: 'FFFFFFFF' } },
+            fill: { fgColor: { rgb: headerColor } },
+            alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+          }
+        }
+      }
+
+      for (let row = 1; row <= range.e.r; row += 1) {
+        for (let col = 0; col <= range.e.c; col += 1) {
+          const cell = worksheet[XLSX.utils.encode_cell({ c: col, r: row })]
+          if (!cell) continue
+          const existingStyle = cell.s ?? {}
+          const horizontal = col === 3 ? 'right' : 'left'
+          cell.s = {
+            ...existingStyle,
+            alignment: { horizontal, vertical: 'center', wrapText: true },
+          }
+          if (col === 3 && cell.t === 'n') {
+            cell.z = '#,##0;[Red]-#,##0'
+          }
+        }
+      }
+    }
+
+    const movimientosSheet = XLSX.utils.json_to_sheet(todos)
+    formatSheet(movimientosSheet, todos, 'FFB8860B')
+    XLSX.utils.book_append_sheet(wb, movimientosSheet, 'Movimientos')
+
+    const ingresosSheet = XLSX.utils.json_to_sheet(atData)
+    formatSheet(ingresosSheet, atData, 'FF10B981')
+    XLSX.utils.book_append_sheet(wb, ingresosSheet, 'Ingresos')
+
+    const gastosSheet = XLSX.utils.json_to_sheet(gData.map(g => ({ ...g, Monto: -g.Monto })))
+    formatSheet(gastosSheet, gData.map(g => ({ ...g, Monto: -g.Monto })), 'FF7F1D1D')
+    XLSX.utils.book_append_sheet(wb, gastosSheet, 'Gastos')
+
+    XLSX.writeFile(wb, `reporte-peluqueria-${desde}-${hasta}.xlsx`, { bookType: 'xlsx', cellStyles: true })
   }
 
   async function exportarPDF() {
@@ -122,7 +173,7 @@ export default function ReportesPage() {
   const ganancia      = totalIngresos - totalGastos
 
   return (
-    <div className="space-y-5 max-w-4xl">
+    <div className="space-y-5 w-full max-w-4xl mx-auto">
       <div>
         <h1 className="font-display text-3xl text-ink-50">Reportes</h1>
         <p className="text-ink-300 text-sm font-mono">Generá reportes en PDF y Excel</p>

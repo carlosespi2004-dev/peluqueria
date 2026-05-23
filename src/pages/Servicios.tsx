@@ -76,8 +76,8 @@ export default function ServiciosPage() {
   }
 
   return (
-    <div className="space-y-5 max-w-2xl">
-      <div className="flex items-center justify-between">
+    <div className="space-y-5 w-full max-w-2xl mx-auto">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-3xl text-ink-50">Catálogo de Servicios</h1>
           <p className="text-ink-300 text-sm font-mono">{items.length} servicios registrados</p>
@@ -127,8 +127,8 @@ export default function ServiciosPage() {
           Cargando...
         </div>
       ) : (
-        <div className="card overflow-hidden p-0">
-          <table className="w-full text-sm">
+        <div className="card overflow-x-auto p-0">
+          <table className="w-full min-w-[540px] text-sm">
             <thead>
               <tr className="border-b border-surface-50">
                 <th className="px-4 py-3 text-left text-xs text-ink-300 uppercase tracking-widest font-body">Servicio</th>

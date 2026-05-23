@@ -71,8 +71,8 @@ export default function GastosPage() {
     .filter(d => d.value > 0)
 
   return (
-    <div className="space-y-5 max-w-4xl">
-      <div className="flex items-center justify-between">
+    <div className="space-y-5 w-full max-w-4xl mx-auto">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-display text-3xl text-ink-50">Gastos</h1>
           <p className="text-ink-300 text-sm font-mono">Mes actual — {fmt.guarani(totalMes)} total</p>

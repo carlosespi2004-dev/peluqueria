@@ -30,8 +30,6 @@ export const rangos = {
 
 export const CATEGORIAS_GASTO: Record<CategoriaGasto, { label: string; color: string }> = {
   productos:  { label: 'Productos',  color: '#7C3AED' },
-  alquiler:   { label: 'Alquiler',   color: '#DC2626' },
-  luz:        { label: 'Luz',        color: '#F59E0B' },
   agua:       { label: 'Agua',       color: '#3B82F6' },
   salarios:   { label: 'Salarios',   color: '#10B981' },
   otros:      { label: 'Otros',      color: '#6B7280' },
@@ -42,21 +40,25 @@ export function getErrorMsg(err: unknown): string {
   return 'Ocurrió un error inesperado'
 }
 
+import { supabase } from './supabase'
+
 export const AUTH_KEY = 'pelu_auth'
 
 export function isAuthenticated(): boolean {
   return localStorage.getItem(AUTH_KEY) === 'true'
 }
 
-export function login(password: string): boolean {
-  const correctPassword = import.meta.env.VITE_APP_PASSWORD as string
-  if (password === correctPassword) {
-    localStorage.setItem(AUTH_KEY, 'true')
-    return true
-  }
-  return false
+export async function signIn(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) return { success: false, message: getErrorMsg(error) }
+  if (!data.session) return { success: false, message: 'No se pudo iniciar sesión. Intenta de nuevo.' }
+
+  localStorage.setItem(AUTH_KEY, 'true')
+  return { success: true }
 }
 
-export function logout(): void {
+export async function logout(): Promise<void> {
+  await supabase.auth.signOut()
   localStorage.removeItem(AUTH_KEY)
 }
