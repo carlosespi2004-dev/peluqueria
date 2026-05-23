@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    @apply bg-surface-400 text-ink-50 font-body;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { @apply bg-surface-300; }
+  ::-webkit-scrollbar-thumb { @apply bg-surface-50 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-gold-500; }
+
+  input, select, textarea {
+    @apply bg-surface-200 border border-surface-50 rounded-lg px-3 py-2
+           text-ink-50 font-body text-sm outline-none
+           focus:border-gold-500 focus:ring-1 focus:ring-gold-500/30
+           placeholder:text-ink-300 transition-colors;
+  }
+
+  input[type="number"] { @apply font-mono; }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface-200 border border-surface-50 rounded-xl p-4;
+  }
+
+  .card-gold {
+    @apply bg-surface-200 border border-gold-500/30 rounded-xl p-4;
+  }
+
+  .btn-primary {
+    @apply bg-gold-500 hover:bg-gold-400 text-surface-400 font-body font-semibold
+           px-4 py-2 rounded-lg text-sm transition-all duration-200
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent hover:bg-surface-100 text-ink-100 border border-surface-50
+           hover:border-gold-500/50 font-body px-4 py-2 rounded-lg text-sm
+           transition-all duration-200;
+  }
+
+  .btn-danger {
+    @apply bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-900/50
+           font-body px-4 py-2 rounded-lg text-sm transition-all duration-200;
+  }
+
+  .stat-value { @apply font-mono text-2xl text-gold-400; }
+  .stat-label { @apply text-xs text-ink-300 uppercase tracking-widest font-body; }
+
+  .gold-line {
+    @apply h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent;
+  }
+
+  .input-label { @apply block text-xs text-ink-300 uppercase tracking-widest mb-1 font-body; }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono;
+  }
+  .badge-green { @apply badge bg-emerald-900/40 text-emerald-400 border border-emerald-800/50; }
+  .badge-red   { @apply badge bg-red-900/40 text-red-400 border border-red-900/50; }
+  .badge-gold  { @apply badge bg-gold-700/30 text-gold-400 border border-gold-600/50; }
+  .badge-gray  { @apply badge bg-surface-100 text-ink-300 border border-surface-50; }
+}
