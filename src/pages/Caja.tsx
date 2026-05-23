@@ -190,7 +190,7 @@ export default function CajaPage() {
             <p className="font-mono text-xl text-ink-200">
               {atenciones.length > 0 ? fmt.guarani(Math.round(totalHoy / atenciones.length)) : '—'}
             </p>
-            <p className="stat-label">Promedio/cliente</p>
+            <p className="stat-label">cliente</p>
           </div>
         </div>
       )}
