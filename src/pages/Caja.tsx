@@ -198,7 +198,7 @@ export default function CajaPage() {
 
       {/* Resumen rápido */}
       {caja && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <div className="card text-center">
             <Users size={16} className="text-gold-400 mx-auto mb-1" />
             <p className="font-mono text-xl text-gold-400">{atenciones.length}</p>
@@ -207,12 +207,6 @@ export default function CajaPage() {
           <div className="card text-center">
             <p className="font-mono text-xl text-gold-400">{fmt.guarani(totalHoy)}</p>
             <p className="stat-label">Ingresos</p>
-          </div>
-          <div className="card text-center">
-            <p className="font-mono text-xl text-ink-200">
-              {atenciones.length > 0 ? fmt.guarani(Math.round(totalHoy / atenciones.length)) : '—'}
-            </p>
-            <p className="stat-label">cliente</p>
           </div>
         </div>
       )}
