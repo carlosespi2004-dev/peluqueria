@@ -20,9 +20,21 @@ export default function CajaPage() {
   const [servNotas, setServNotas]     = useState('')
   const [submitting, setSubmitting]   = useState(false)
 
-  const today = hoy()
+  const [today, setToday] = useState(hoy())
 
-  useEffect(() => { init() }, [])
+  useEffect(() => {
+    const checkDayChange = () => {
+      const currentDate = hoy()
+      if (currentDate !== today) {
+        setToday(currentDate)
+      }
+    }
+
+    const interval = setInterval(checkDayChange, 60_000)
+    return () => clearInterval(interval)
+  }, [today])
+
+  useEffect(() => { init() }, [today])
 
   async function init() {
     setLoading(true)
@@ -216,7 +228,7 @@ export default function CajaPage() {
                   <select value={servicioId} onChange={e => handleServicioChange(e.target.value)} className="w-full">
                     <option value="">— Seleccionar —</option>
                     {catalogo.map(c => (
-                      <option key={c.id} value={c.id}>{c.nombre} — {fmt.guarani(c.precio)}</option>
+                      <option key={c.id} value={c.id}>{c.nombre}: {fmt.guarani(c.precio)}</option>
                     ))}
                     <option value="custom">Personalizado</option>
                   </select>
