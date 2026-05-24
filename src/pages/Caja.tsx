@@ -30,8 +30,18 @@ export default function CajaPage() {
       }
     }
 
+    checkDayChange()
     const interval = setInterval(checkDayChange, 60_000)
-    return () => clearInterval(interval)
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') checkDayChange()
+    }
+
+    window.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [today])
 
   useEffect(() => { init() }, [today])
