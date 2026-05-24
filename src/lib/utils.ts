@@ -1,14 +1,16 @@
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear } from 'date-fns'
+import { format, parseISO, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear } from 'date-fns'
 import { es } from 'date-fns/locale'
 import type { CategoriaGasto } from '../types'
+
+const toDate = (d: string | Date) => typeof d === 'string' ? parseISO(d) : d
 
 export const fmt = {
   guarani: (n: number) =>
     new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG', maximumFractionDigits: 0 }).format(n),
-  fecha: (d: string | Date) => format(new Date(d), "dd 'de' MMMM yyyy", { locale: es }),
-  fechaCorta: (d: string | Date) => format(new Date(d), 'dd/MM/yyyy'),
-  hora: (d: string | Date) => format(new Date(d), 'HH:mm'),
-  mes: (d: string | Date) => format(new Date(d), 'MMMM yyyy', { locale: es }),
+  fecha: (d: string | Date) => format(toDate(d), "dd 'de' MMMM yyyy", { locale: es }),
+  fechaCorta: (d: string | Date) => format(toDate(d), 'dd/MM/yyyy'),
+  hora: (d: string | Date) => format(toDate(d), 'HH:mm'),
+  mes: (d: string | Date) => format(toDate(d), 'MMMM yyyy', { locale: es }),
 }
 
 export const hoy = () => format(new Date(), 'yyyy-MM-dd')
